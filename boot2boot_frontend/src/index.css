@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-parkinsans: "Parkinsans", sans-serif;
+  --font-sans: "Parkinsans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+html,
+body {
+  font-family: var(--font-parkinsans), "Parkinsans", sans-serif;
+  background-color: #f7f7f8;
+  color: #262626;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.font-parkinsans {
+  font-family: var(--font-parkinsans), "Parkinsans", sans-serif !important;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+/* ==========================================================================
+   Global Text Selection Styling
+   Sets the selection highlight background to brand lime (#E0FE9B)
+   and ensures selected text is crisp and readable (#18191b) across the entire site.
+   ========================================================================== */
+*::selection,
+::selection {
+  background-color: #E0FE9B !important;
+  color: #18191b !important;
+}
+
+*::-moz-selection,
+::-moz-selection {
+  background-color: #E0FE9B !important;
+  color: #18191b !important;
+}
+
+/* ==========================================================================
+   Logo White Glow Effect (Hero Section Dark Background)
+   ========================================================================== */
+.logo-white-glow {
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.95))
+          drop-shadow(0 0 8px rgba(255, 255, 255, 0.65))
+          drop-shadow(0 0 12px rgba(255, 255, 255, 0.35));
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+.group:hover .logo-white-glow,
+.logo-white-glow:hover {
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 1))
+          drop-shadow(0 0 9px rgba(255, 255, 255, 0.85))
+          drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.logo-standard {
+  filter: none;
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+
