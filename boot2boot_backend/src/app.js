@@ -3,8 +3,15 @@ import cors from "cors";
 
 
 const app = express()
+
+const allowedOrigins = [
+  "https://boot2boot.com",
+  "https://www.boot2boot.com",
+  process.env.CORS_ORIGIN, // allows whatever is in your .env (e.g., http://localhost:5173)
+];
 app.use(cors({
-    origin: process.env.CORS_ORIGIN
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
 }))
 
 

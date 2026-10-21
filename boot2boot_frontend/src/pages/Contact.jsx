@@ -31,7 +31,11 @@ const initialFormState = {
   services: [],
 };
 
-const API_URL = import.meta.env.API_URL || "http://localhost:5500/api/forms";
+const API_BASE_URL = (
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.API_URL ||
+  "http://localhost:5500"
+).replace(/\/+$/, "");
 
 export default function Contact() {
   const dividerRef = useRef(null);
@@ -77,7 +81,7 @@ export default function Contact() {
     setErrorMessage("");
 
     try {
-      const response = await axios.post(`${API_URL}/api/forms`, formData);
+      const response = await axios.post(`${API_BASE_URL}/api/forms`, formData);
 
       const result = response.data;
 
