@@ -7,6 +7,7 @@ const app = express()
 const allowedOrigins = [
   "https://boot2boot.com",
   "https://www.boot2boot.com",
+  "https://boot2boot-official-git-main-team-b2-b.vercel.app",
   "https://boot2boot-official-git-main-team-b2-b.vercel.app/",
   process.env.CORS_ORIGIN, // allows whatever is in your .env (e.g., http://localhost:5173)
 ];
