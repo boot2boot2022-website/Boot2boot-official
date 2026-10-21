@@ -52,12 +52,10 @@ export const submitForm = asyncHandler(async (req, res) => {
             services,
         });
 
-        // send notification & confirmation emails
-        try {
-            await sendFormEmails(form);
-        } catch (emailError) {
-            console.error("[SubmitForm] Email service error:", emailError?.message || emailError);
-        }
+        // send notification & confirmation emails in the background (non-blocking)
+        sendFormEmails(form).catch((emailError) => {
+            console.error("[SubmitForm] Background email error:", emailError?.message || emailError);
+        });
 
         return res
             .status(201)

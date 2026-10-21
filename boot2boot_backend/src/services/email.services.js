@@ -5,7 +5,12 @@ import nodemailer from "nodemailer";
  * Uses getters to ensure environment variables are evaluated dynamically
  */
 export const emailTransporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
     auth: {
         get user() {
             return process.env.EMAIL_USER;
