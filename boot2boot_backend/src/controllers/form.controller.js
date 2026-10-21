@@ -2,7 +2,8 @@ import { Form } from "../models/form.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import mongoose from "mongoose"
+import { sendFormEmails } from "../services/email.services.js";
+import mongoose from "mongoose";
 
 // validate email
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -49,7 +50,14 @@ export const submitForm = asyncHandler(async (req, res) => {
             organization,
             message,
             services,
-        })
+        });
+
+        // send notification & confirmation emails
+        try {
+            await sendFormEmails(form);
+        } catch (emailError) {
+            console.error("[SubmitForm] Email service error:", emailError?.message || emailError);
+        }
 
         return res
             .status(201)
@@ -59,7 +67,7 @@ export const submitForm = asyncHandler(async (req, res) => {
                     form,
                     "Form submitted successfully"
                 )
-            )
+            );
     } catch (error) {
         // Errors we threw ourselves: send the status and message we set
         if(error instanceof ApiError){
