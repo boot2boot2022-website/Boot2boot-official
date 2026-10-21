@@ -157,5 +157,13 @@ export async function sendFormEmails(submission) {
         sendContactNotification(submission),
         sendUserConfirmation(submission),
     ]);
+
+    results.forEach((res, index) => {
+        const type = index === 0 ? "Owner Notification" : "User Confirmation";
+        if (res.status === "rejected") {
+            console.error(`❌ [EmailService] ${type} failed:`, res.reason?.message || res.reason);
+        }
+    });
+
     return results;
 }
