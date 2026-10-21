@@ -77,7 +77,7 @@ export default function Contact() {
     setErrorMessage("");
 
     try {
-      const response = await axios.post(API_URL, formData);
+      const response = await axios.post(`${API_URL}/api/forms`, formData);
 
       const result = response.data;
 
