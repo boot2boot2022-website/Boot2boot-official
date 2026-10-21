@@ -1,1 +1,1 @@
-export const DB_NAME = "b2bformdb"
+export const DB_NAME = "boot2bootform"

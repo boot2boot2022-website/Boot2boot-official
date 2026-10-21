@@ -31,7 +31,7 @@ const initialFormState = {
   services: [],
 };
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5500/api/forms";
+const API_URL = import.meta.env.API_URL || "http://localhost:5500/api/forms";
 
 export default function Contact() {
   const dividerRef = useRef(null);
