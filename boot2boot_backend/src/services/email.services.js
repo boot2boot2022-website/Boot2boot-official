@@ -1,169 +1,444 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 /**
- * Nodemailer transporter setup for Gmail SMTP
- * Uses getters to ensure environment variables are evaluated dynamically
+ * Lazy initialization of the Resend client
+ * Ensures process.env variables are properly loaded from dotenv
  */
-export const emailTransporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 15000,
-    auth: {
-        get user() {
-            return process.env.EMAIL_USER;
-        },
-        get pass() {
-            return process.env.EMAIL_PASS;
-        },
-    },
-});
+let resendClient = null;
 
-/**
- * Verify transporter connection on startup or demand
- */
-export async function verifyEmailTransporter() {
-    try {
-        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-            console.warn("⚠️ EMAIL_USER or EMAIL_PASS not configured in .env. Email sending will be skipped.");
-            return false;
-        }
-        await emailTransporter.verify();
-        console.log("📧 Nodemailer email transporter ready");
-        return true;
-    } catch (error) {
-        console.error("❌ Nodemailer transporter verification failed:", error);
-        return false;
+function getResendClient() {
+  if (!resendClient) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.warn("⚠️ [Resend] RESEND_API_KEY is not configured in .env. Email sending will be skipped.");
+      return null;
     }
+    resendClient = new Resend(apiKey);
+  }
+  return resendClient;
 }
+
+/**
+ * Default sender address.
+ * To remove 'onboarding@resend.dev' branding, verify your domain (e.g. boot2boot.com)
+ * in Resend Dashboard -> Domains, then set RESEND_FROM_EMAIL="Boot2Boot <inquiry@boot2boot.com>"
+ */
+const getSenderEmail = () => {
+  return process.env.RESEND_FROM_EMAIL || "Boot2Boot <inquiry@boot2boot.com>";
+};
 
 /**
  * Send notification email to the owner/admin when a contact form is submitted
  */
 export async function sendContactNotification(submission) {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-        console.warn("Skipping notification email: email credentials missing");
-        return;
-    }
+  const resend = getResendClient();
+  if (!resend) return null;
 
-    let recipient = process.env.OWNER_EMAIL || process.env.EMAIL_USER;
-    if (!recipient || recipient.includes("recipient_email")) {
-        recipient = process.env.EMAIL_USER;
-    }
-    const servicesList = Array.isArray(submission.services) && submission.services.length > 0
-        ? submission.services
-            .map((s) => `<span style="display:inline-block;padding:4px 10px;margin:2px;background:#eef2ff;border-radius:12px;font-size:12px;color:#3730a3;">${s}</span>`)
-            .join(" ")
-        : "<em>None selected</em>";
+  const recipient = process.env.OWNER_EMAIL || "boot2boot2022@gmail.com";
+  const fromEmail = getSenderEmail();
 
-    //html content
+  const servicesList = Array.isArray(submission.services) && submission.services.length > 0
+    ? submission.services
+      .map(
+        (s) =>
+          `<span style="display:inline-block;padding:5px 12px;margin:3px 2px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:16px;font-size:12px;font-weight:600;color:#3730a3;">${s}</span>`
+      )
+      .join(" ")
+    : "<em style='color:#9ca3af;'>None selected</em>";
 
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 
-    const htmlContent = `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-      <h2 style="color: #111827; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px;">
-        Message For Boot2Boot Team
-      </h2>
-      <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-        <tr>
-          <td style="padding: 8px 0; color: #6b7280; width: 140px; font-weight: bold;">Name:</td>
-          <td style="padding: 8px 0; color: #111827;">${submission.name}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Email:</td>
-          <td style="padding: 8px 0; color: #111827;"><a href="mailto:${submission.email}">${submission.email}</a></td>
-        </tr>
-        <tr>
-          <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Phone:</td>
-          <td style="padding: 8px 0; color: #111827;">${submission.phone || "N/A"}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Organization:</td>
-          <td style="padding: 8px 0; color: #111827;">${submission.organization || "N/A"}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px 0; color: #6b7280; font-weight: bold;">Services:</td>
-          <td style="padding: 8px 0;">${servicesList}</td>
-        </tr>
-      </table>
+<body style="
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #181818;
+">
 
-      <div style="margin-top: 20px; padding: 15px; background: #f9fafb; border-radius: 6px;">
-        <p style="margin: 0 0 8px 0; color: #6b7280; font-weight: bold;">Message:</p>
-        <p style="margin: 0; color: #1f2937; white-space: pre-wrap;">${submission.message || "No message provided."}</p>
+  <div style="
+    max-width: 540px;
+    margin: 30px auto;
+    background-color: #ffffff;
+    border: 1px solid #dedede;
+    border-radius: 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+  ">
+
+    <!-- Header -->
+    <div style="display: flex; justify-content: center; width: 100%;">
+    <div style="background: linear-gradient(135deg, #09090b 0%, #18181b 100%); padding: 26px 28px; border-bottom: 3px solid #E0FE9B; text-align: center; max-width: 600px; width: 100%;">
+    <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 300; letter-spacing: -0.5px;">Message For Boot2Boot Team</h1>
+    </div>
+    </div>
+
+    <!-- Inner Content -->
+    <div style="padding: 26px 28px;">
+
+      <!-- Inquiry Title -->
+      <div style="
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eaeaea;
+      ">
+        <h2 style="
+          margin: 0;
+          font-size: 20px;
+          line-height: 1.4;
+          font-weight: 500;
+          letter-spacing: -0.5px;
+          color: #171717;
+        ">
+          New Client Inquiry
+        </h2>
+
+        <p style="
+          margin: 6px 0 0;
+          font-size: 13px;
+          line-height: 1.6;
+          color: #737373;
+        ">
+          A new message has been submitted through your website.
+        </p>
       </div>
 
-      <p style="font-size: 12px; color: #9ca3af; margin-top: 20px;">
-        Submitted at: ${new Date().toLocaleString()}
-      </p>
-    </div>
-  `;
+      <!-- Contact Information -->
+      <div style="padding-top: 24px;">
 
-    const info = await emailTransporter.sendMail({
-        from: `"Boot2Boot Form" <${process.env.EMAIL_USER}>`,
-        to: recipient,
-        replyTo: submission.email,
-        subject: `New Project Opportunity — ${submission.name} | Boot2Boot`,
-        html: htmlContent,
+      <h2 style="
+        margin: 0 0 18px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #171717;
+      ">
+        Contact Information
+      </h2>
+
+      <!-- Client Name -->
+      <div style="margin-bottom: 16px;">
+        <p style="
+          margin: 0 0 5px;
+          font-size: 11px;
+          font-weight: 600;
+          color: #737373;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        ">
+          Full Name
+        </p>
+
+        <p style="
+          margin: 0;
+          font-size: 14px;
+          line-height: 1.6;
+          font-weight: 500;
+          color: #171717;
+          overflow-wrap: anywhere;
+        ">
+          ${submission.name}
+        </p>
+      </div>
+
+      <!-- Email -->
+      <div style="margin-bottom: 16px;">
+        <p style="
+          margin: 0 0 5px;
+          font-size: 11px;
+          font-weight: 600;
+          color: #737373;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        ">
+          Email Address
+        </p>
+
+        <p style="
+          margin: 0;
+          font-size: 14px;
+          line-height: 1.6;
+          color: #171717;
+          overflow-wrap: anywhere;
+        ">
+          <a
+            href="mailto:${submission.email}"
+            style="color: #171717; text-decoration: none;"
+          >
+            ${submission.email}
+          </a>
+        </p>
+      </div>
+
+      <!-- Phone -->
+      <div style="margin-bottom: 16px;">
+        <p style="
+          margin: 0 0 5px;
+          font-size: 11px;
+          font-weight: 600;
+          color: #737373;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        ">
+          Phone Number
+        </p>
+
+        <p style="
+          margin: 0;
+          font-size: 14px;
+          line-height: 1.6;
+          color: #171717;
+        ">
+          ${submission.phone || "Not provided"}
+        </p>
+      </div>
+
+      <!-- Organization -->
+      <div style="margin-bottom: 22px;">
+        <p style="
+          margin: 0 0 5px;
+          font-size: 11px;
+          font-weight: 600;
+          color: #737373;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        ">
+          Organization
+        </p>
+
+        <p style="
+          margin: 0;
+          font-size: 14px;
+          line-height: 1.6;
+          color: #171717;
+          overflow-wrap: anywhere;
+        ">
+          ${submission.organization || "Not provided"}
+        </p>
+      </div>
+
+      <!-- Services -->
+      <div style="
+        padding-top: 20px;
+        border-top: 1px solid #eaeaea;
+      ">
+
+        <h2 style="
+          margin: 0 0 12px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #171717;
+        ">
+          Services of Interest
+        </h2>
+
+        <div style="font-size: 0; line-height: 2;">
+          ${servicesList}
+        </div>
+
+      </div>
+
+      <!-- Client Message -->
+      <div style="margin-top: 24px;">
+
+        <h2 style="
+          margin: 0 0 12px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #171717;
+        ">
+          Message from Client
+        </h2>
+
+        <div style="
+          padding: 16px;
+          background-color: #f7f7f7;
+          border-radius: 10px;
+        ">
+
+          <p style="
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #404040;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+          ">${submission.message || "No message provided."}</p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Footer -->
+      <div style="
+        margin-top: 28px;
+        padding-top: 18px;
+        border-top: 1px solid #eaeaea;
+        text-align: center;
+      ">
+
+        <p style="
+          margin: 0;
+          font-size: 11px;
+          line-height: 1.8;
+          color: #737373;
+        ">
+          Submitted on ${new Date().toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  })}
+        </p>
+
+        <p style="
+          margin: 4px 0 0;
+          font-size: 11px;
+          color: #a3a3a3;
+        ">
+          Sent securely via Boot2Boot
+        </p>
+
+      </div>
+
+    </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
+`;
+
+
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: [recipient],
+      replyTo: submission.email,
+      subject: `New Project Opportunity — ${submission.name} | Boot2Boot`,
+      html: htmlContent,
     });
-    console.log(`✅ Notification email sent to ${recipient} (Message ID: ${info.messageId})`);
-    return info;
+
+    if (error) {
+      console.error("❌ [Resend] Failed to send owner notification:", error);
+      throw error;
+    }
+
+    console.log(`✅ [Resend] Notification email sent to ${recipient} (Email ID: ${data?.id})`);
+    return data;
+  } catch (err) {
+    console.error("❌ [Resend] Error in sendContactNotification:", err?.message || err);
+    throw err;
+  }
 }
 
 /**
  * Send an automated confirmation email to the user
  */
 export async function sendUserConfirmation(submission) {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !submission.email) {
-        return;
-    }
+  const resend = getResendClient();
+  if (!resend || !submission.email) return null;
 
-    const servicesText = Array.isArray(submission.services) && submission.services.length > 0
-        ? submission.services.join(", ")
-        : "General Inquiry";
+  const fromEmail = getSenderEmail();
+  const replyToEmail = process.env.RESEND_REPLY_TO || "inquiry@boot2boot.com";
 
-    const htmlContent = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-      <h2 style="color: #111827;">Thank you for contacting us, ${submission.name}!</h2>
-      <p style="color: #4b5563; line-height: 1.6; font-size: 15px;">
-        We have received your request and our team will reach out to you soon.
-      </p>
-      <div style="margin-top: 20px; padding: 15px; background: #f9fafb; border-radius: 6px;">
-        <h4 style="margin: 0 0 10px 0; color: #374151;">Summary of your request:</h4>
-        <p style="margin: 4px 0; color: #6b7280;"><strong>Services:</strong> ${servicesText}</p>
-        ${submission.message ? `<p style="margin: 4px 0; color: #6b7280;"><strong>Message:</strong> ${submission.message}</p>` : ""}
-      </div>
-      <p style="margin-top: 20px; color: #4b5563; font-size: 14px;">
-        Best regards,<br/>Team Boot2Boot
-      </p>
-    </div>
+  const servicesText = Array.isArray(submission.services) && submission.services.length > 0
+    ? submission.services.join(", ")
+    : "General Consultation";
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+        <div style="max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #e5e7eb;">
+          <div style="background: linear-gradient(135deg, #09090b 0%, #18181b 100%); padding: 28px 30px; text-align: left; border-bottom: 3px solid #E0FE9B;">
+            <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 700; letter-spacing: -0.5px;">Boot2Boot</h1>
+            <p style="margin: 6px 0 0 0; color: #E0FE9B; font-size: 13px; font-weight: 500;">Digital Marketing Agency</p>
+          </div>
+          
+          <div style="padding: 30px;">
+            <h2 style="margin: 0 0 12px 0; color: #09090b; font-size: 19px; font-weight: 600;">
+              Thank you for reaching out, ${submission.name}!
+            </h2>
+            <p style="color: #52525b; line-height: 1.6; font-size: 14px; margin: 0 0 20px 0;">
+              We have received your project details. Our team is already reviewing your inquiry and will connect with you within 24 business hours to discuss next steps.
+            </p>
+
+            <div style="margin: 20px 0; padding: 18px; background: #fbfbfa; border-radius: 8px; border: 1px solid #f4f4f5;">
+              <h4 style="margin: 0 0 10px 0; color: #18181b; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">
+                Summary of your inquiry
+              </h4>
+              <p style="margin: 6px 0; color: #52525b; font-size: 14px;">
+                <strong style="color: #18181b;">Interested Services:</strong> ${servicesText}
+              </p>
+              ${submission.organization ? `<p style="margin: 6px 0; color: #52525b; font-size: 14px;"><strong style="color: #18181b;">Organization:</strong> ${submission.organization}</p>` : ""}
+              ${submission.message ? `<p style="margin: 6px 0; color: #52525b; font-size: 14px;"><strong style="color: #18181b;">Your Message:</strong> "${submission.message}"</p>` : ""}
+            </div>
+
+            <p style="margin: 24px 0 0 0; color: #52525b; font-size: 14px; line-height: 1.6;">
+              In the meantime, feel free to explore our case studies and latest updates at <a href="https://boot2boot.com" style="color: #18181b; font-weight: 600; text-decoration: underline;">boot2boot.com</a>.
+            </p>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #f4f4f5;">
+              <p style="margin: 0; color: #18181b; font-size: 14px; font-weight: 600;">Best regards,</p>
+              <p style="margin: 2px 0 0 0; color: #71717a; font-size: 13px;">Team Boot2Boot</p>
+              <p style="margin: 2px 0 0 0; color: #71717a; font-size: 13px;">
+                <a href="mailto:${replyToEmail}" style="color: #71717a; text-decoration: none;">${replyToEmail}</a> &bull; <a href="https://boot2boot.com" style="color: #71717a; text-decoration: none;">boot2boot.com</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
   `;
 
-    const info = await emailTransporter.sendMail({
-        from: `"Boot2Boot Support" <${process.env.EMAIL_USER}>`,
-        to: submission.email,
-        subject: `We got your request! Our team will reach out soon`,
-        html: htmlContent,
+  try {
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: [submission.email],
+      replyTo: replyToEmail,
+      subject: `We received your request | Boot2Boot`,
+      html: htmlContent,
     });
-    console.log(`✅ Confirmation email sent to ${submission.email} (Message ID: ${info.messageId})`);
-    return info;
+
+    if (error) {
+      console.error("❌ [Resend] Failed to send user confirmation:", error);
+      throw error;
+    }
+
+    console.log(`✅ [Resend] Confirmation email sent to ${submission.email} (Email ID: ${data?.id})`);
+    return data;
+  } catch (err) {
+    console.error("❌ [Resend] Error in sendUserConfirmation:", err?.message || err);
+    throw err;
+  }
 }
 
 /**
  * Sends both owner notification and user confirmation concurrently
  */
 export async function sendFormEmails(submission) {
-    const results = await Promise.allSettled([
-        sendContactNotification(submission),
-        sendUserConfirmation(submission),
-    ]);
+  const results = await Promise.allSettled([
+    sendContactNotification(submission),
+    sendUserConfirmation(submission),
+  ]);
 
-    results.forEach((res, index) => {
-        const type = index === 0 ? "Owner Notification" : "User Confirmation";
-        if (res.status === "rejected") {
-            console.error(`❌ [EmailService] ${type} failed:`, res.reason?.message || res.reason);
-        }
-    });
+  results.forEach((res, index) => {
+    const type = index === 0 ? "Owner Notification" : "User Confirmation";
+    if (res.status === "rejected") {
+      console.error(`❌ [Resend EmailService] ${type} failed:`, res.reason?.message || res.reason);
+    }
+  });
 
-    return results;
+  return results;
 }

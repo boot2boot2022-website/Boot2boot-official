@@ -136,11 +136,11 @@ export default function Blog() {
               className="group cursor-pointer flex flex-col"
             >
               {/* Full-width High-Impact Banner Image */}
-              <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-neutral-200/80 bg-neutral-100 h-[340px] sm:h-[460px] md:h-[560px] lg:h-[640px] w-full mb-6">
+              <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-neutral-200/80 bg-neutral-100 w-full mb-6 aspect-[16/10] sm:aspect-[3/2]">
                 <img
                   src={featuredAd.image}
                   alt={featuredAd.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.01]"
                   loading="lazy"
                 />
               </div>

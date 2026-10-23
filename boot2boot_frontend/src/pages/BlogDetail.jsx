@@ -174,11 +174,11 @@ export default function BlogDetail() {
         </header>
 
         {/* Hero Image */}
-        <div className="article-animate-item relative overflow-hidden rounded-2xl sm:rounded-3xl border border-neutral-200/80 bg-neutral-100 h-[340px] sm:h-[480px] md:h-[580px] w-full mb-12 sm:mb-16">
+        <div className="article-animate-item relative overflow-hidden rounded-2xl sm:rounded-3xl border border-neutral-200/80 bg-neutral-100 w-full mb-12 sm:mb-16 shadow-sm">
           <img
             src={article.image}
             alt={article.title}
-            className="w-full h-full object-cover"
+            className="w-full h-auto block"
           />
         </div>
 
