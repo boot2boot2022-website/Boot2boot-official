@@ -32,11 +32,15 @@ export default function WordReveal({
   once = true,
   style = {},
   useScrollTrigger = true,
+  splitBy = "auto", // "auto" | "words" | "letters" | "chars"
   ...props
 }) {
   const containerRef = useRef(null);
   const wordsRef = useRef([]);
   const { isTransitioning } = usePageTransition();
+
+  // Reset ref collection before each render pass
+  wordsRef.current = [];
 
   // Extract text
   const rawText =
@@ -52,6 +56,13 @@ export default function WordReveal({
     () => rawText.trim().split(/\s+/).filter(Boolean),
     [rawText]
   );
+
+  // If splitBy is explicitly letters/chars or if auto and only 1 word with stagger, split by letters
+  const isLetterSplit = useMemo(() => {
+    if (splitBy === "letters" || splitBy === "chars") return true;
+    if (splitBy === "words") return false;
+    return words.length === 1 && stagger > 0;
+  }, [splitBy, words.length, stagger]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -139,6 +150,7 @@ export default function WordReveal({
     scrollStart,
     once,
     useScrollTrigger,
+    isLetterSplit,
   ]);
 
   const isCentered = className.includes("justify-center") || className.includes("text-center");
@@ -152,19 +164,46 @@ export default function WordReveal({
       {...props}
     >
       <span aria-hidden="true" className={`inline-flex flex-wrap select-text ${isCentered ? "justify-center w-full" : ""}`}>
-        {words.map((word, idx) => (
-          <span
-            key={`${word}-${idx}`}
-            className="inline-block overflow-hidden py-1 mr-[0.25em] last:mr-0 align-top select-text"
-          >
+        {isLetterSplit ? (
+          words.map((word, wIdx) => (
             <span
-              ref={(el) => (wordsRef.current[idx] = el)}
-              className="inline-block will-change-transform select-text"
+              key={`word-${wIdx}`}
+              className="inline-block whitespace-nowrap mr-[0.25em] last:mr-0 align-top select-text"
             >
-              {word}
+              {word.split("").map((char, cIdx) => (
+                <span
+                  key={`char-${cIdx}`}
+                  className="inline-block overflow-hidden py-1 align-top select-text"
+                >
+                  <span
+                    ref={(el) => {
+                      if (el) wordsRef.current.push(el);
+                    }}
+                    className="inline-block will-change-transform select-text"
+                  >
+                    {char}
+                  </span>
+                </span>
+              ))}
             </span>
-          </span>
-        ))}
+          ))
+        ) : (
+          words.map((word, idx) => (
+            <span
+              key={`${word}-${idx}`}
+              className="inline-block overflow-hidden py-1 mr-[0.25em] last:mr-0 align-top select-text"
+            >
+              <span
+                ref={(el) => {
+                  if (el) wordsRef.current[idx] = el;
+                }}
+                className="inline-block will-change-transform select-text"
+              >
+                {word}
+              </span>
+            </span>
+          ))
+        )}
       </span>
     </Component>
   );

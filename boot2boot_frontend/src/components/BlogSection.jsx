@@ -53,14 +53,15 @@ export default function BlogSection() {
     <section id="blog" className="relative z-30 w-full bg-[#f7f7f8] text-neutral-900 pt-16 sm:pt-24 pb-20 px-6 sm:px-10 lg:px-16 font-parkinsans overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto space-y-12">
         {/* Section Header */}
-        <div className="text-center space-y-4 pb-8 border-b border-neutral-200">
+        <div className="flex flex-col items-center justify-center text-center space-y-4 pb-8 border-b border-neutral-200 w-full">
           <WordReveal
             text="Blog"
             as="h2"
-            className="text-3xl sm:text-5xl font-medium text-neutral-950 tracking-tight leading-tight"
+            splitBy="letters"
+            className="w-full justify-center text-center text-3xl sm:text-5xl font-medium text-neutral-950 tracking-tight leading-tight"
             scrollStart="top 90%"
-            stagger={0.08}
-            duration={0.85}
+            stagger={0.07}
+            duration={0.8}
           />
         </div>
 
@@ -81,7 +82,7 @@ export default function BlogSection() {
                   <img
                     src={blog.image}
                     alt={blog.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover"
                     loading="lazy"
                   />
                 </div>
