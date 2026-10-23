@@ -28,21 +28,6 @@ export default function Blog() {
   // Remaining articles for the All Blogs section
   const remainingBlogs = blogs.slice(1);
 
-  // Group blogs into alternating patterns: 3-blog row, then 4-blog row, then 3-blog row, etc.
-  const alternatingSections = [];
-  let cursor = 0;
-  let isThree = true;
-
-  while (cursor < remainingBlogs.length) {
-    const count = isThree ? 3 : 4;
-    const chunk = remainingBlogs.slice(cursor, cursor + count);
-    alternatingSections.push({
-      type: isThree ? "three" : "four",
-      items: chunk,
-    });
-    cursor += count;
-    isThree = !isThree;
-  }
 
   // GSAP Entrance Animation for Divider and Hero Card
   useEffect(() => {
@@ -195,218 +180,71 @@ export default function Blog() {
               </span>
             </div>
 
-            {/* Alternating Sections */}
-            <div className="space-y-16 sm:space-y-20">
-              {alternatingSections.map((section, sIndex) => {
-                // TYPE 1: 3-Blog Format (1st is Vertical, Center is Bigger, 3rd is Right)
-                if (section.type === "three") {
-                  if (section.items.length === 3) {
-                    const [leftBlog, centerBlog, rightBlog] = section.items;
-                    return (
-                      <div
-                        key={sIndex}
-                        className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-start"
-                      >
-                        {/* 1st Card: Vertical Poster (lg:col-span-3) */}
-                        <article
-                          onClick={() => handleNavigate(leftBlog.slug)}
-                          className="lg:col-span-3 group flex flex-col space-y-3 cursor-pointer"
-                        >
-                          <div className="relative overflow-hidden rounded-xl bg-neutral-100 aspect-[3/4] w-full">
-                            <img
-                              src={leftBlog.image}
-                              alt={leftBlog.title}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                          </div>
+            {/* All Articles Grid - Uniform Responsive Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 items-start">
+              {remainingBlogs.map((blog, idx) => {
+                const isWhitepaper = blog.badge === "Whitepaper";
 
-                          <div className="flex items-center flex-wrap gap-2 text-xs pt-1">
-                            <span className="inline-flex items-center gap-1 bg-[#ffe600] text-black font-extrabold text-[10px] px-1.5 py-0.5 rounded-[2px] tracking-wide uppercase">
-                              <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
-                              </svg>
-                              Insight
-                            </span>
-                            <span className="text-neutral-500 font-normal text-[11px]">
-                              ( {leftBlog.category} )
-                            </span>
-                          </div>
-
-                          <h3 className="text-base sm:text-lg font-normal text-neutral-950 tracking-tight leading-snug line-clamp-3 group-hover:underline underline-offset-2">
-                            {leftBlog.title}
-                          </h3>
-                        </article>
-
-                        {/* 2nd Card: Bigger Center Card (lg:col-span-6) */}
-                        <article
-                          onClick={() => handleNavigate(centerBlog.slug)}
-                          className="lg:col-span-6 group flex flex-col space-y-3 cursor-pointer"
-                        >
-                          <div className="relative overflow-hidden rounded-2xl bg-neutral-100 aspect-[16/10] w-full">
-                            <img
-                              src={centerBlog.image}
-                              alt={centerBlog.title}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                          </div>
-
-                          <div className="flex items-center flex-wrap gap-2 text-xs pt-1">
-                            <span className="inline-flex items-center gap-1 bg-[#00dc23] text-white font-bold text-[10px] px-1.5 py-0.5 rounded-[2px] tracking-wide uppercase">
-                              <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
-                              </svg>
-                              Whitepaper
-                            </span>
-                            <span className="text-neutral-500 font-normal text-[11px]">
-                              ( {centerBlog.category} )
-                            </span>
-                            <span className="text-neutral-400">·</span>
-                            <span className="text-neutral-500 font-mono text-[11px]">
-                              {centerBlog.date}
-                            </span>
-                          </div>
-
-                          <h3 className="text-base sm:text-lg font-normal text-neutral-950 tracking-tight leading-snug line-clamp-3 group-hover:underline underline-offset-2">
-                            {centerBlog.title}
-                          </h3>
-                        </article>
-
-                        {/* 3rd Card: Right Card (lg:col-span-3) */}
-                        <article
-                          onClick={() => handleNavigate(rightBlog.slug)}
-                          className="lg:col-span-3 group flex flex-col space-y-3 cursor-pointer"
-                        >
-                          <div className="relative overflow-hidden rounded-xl bg-neutral-100 aspect-square w-full">
-                            <img
-                              src={rightBlog.image}
-                              alt={rightBlog.title}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                          </div>
-
-                          <div className="flex items-center flex-wrap gap-2 text-xs pt-1">
-                            <span className="inline-flex items-center gap-1 bg-[#ffe600] text-black font-extrabold text-[10px] px-1.5 py-0.5 rounded-[2px] tracking-wide uppercase">
-                              <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
-                              </svg>
-                              Insight
-                            </span>
-                            <span className="text-neutral-500 font-normal text-[11px]">
-                              ( {rightBlog.category} )
-                            </span>
-                          </div>
-
-                          <h3 className="text-base sm:text-lg font-normal text-neutral-950 tracking-tight leading-snug line-clamp-3 group-hover:underline underline-offset-2">
-                            {rightBlog.title}
-                          </h3>
-                        </article>
-                      </div>
-                    );
-                  }
-
-                  // Partial 3-row fallback (1 or 2 items)
-                  return (
-                    <div
-                      key={sIndex}
-                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-start"
-                    >
-                      {section.items.map((blog, idx) => (
-                        <article
-                          key={blog.slug || idx}
-                          onClick={() => handleNavigate(blog.slug)}
-                          className="group flex flex-col space-y-3 cursor-pointer"
-                        >
-                          <div className="relative overflow-hidden rounded-xl bg-neutral-100 aspect-[16/10] w-full">
-                            <img
-                              src={blog.image}
-                              alt={blog.title}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                          </div>
-                          <div className="flex items-center flex-wrap gap-2 text-xs pt-1">
-                            <span className="inline-flex items-center gap-1 bg-[#ffe600] text-black font-extrabold text-[10px] px-1.5 py-0.5 rounded-[2px] tracking-wide uppercase">
-                              <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
-                              </svg>
-                              Insight
-                            </span>
-                            <span className="text-neutral-500 font-normal text-[11px]">
-                              ( {blog.category} )
-                            </span>
-                          </div>
-                          <h3 className="text-base sm:text-lg font-normal text-neutral-950 tracking-tight leading-snug line-clamp-3 group-hover:underline underline-offset-2">
-                            {blog.title}
-                          </h3>
-                        </article>
-                      ))}
-                    </div>
-                  );
-                }
-
-                // TYPE 2: 4-Blog in a Line Format (1st & 3rd Vertical, 2nd & 4th Horizontal)
                 return (
-                  <div
-                    key={sIndex}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 items-start"
+                  <article
+                    key={blog.slug || idx}
+                    onClick={() => handleNavigate(blog.slug)}
+                    className="group flex flex-col space-y-3.5 cursor-pointer"
                   >
-                    {section.items.map((blog, idx) => {
-                      const isVertical = idx % 2 === 0; // idx 0 and idx 2 are Vertical
-                      const isWhitepaper = idx === 3;
+                    {/* Media Container with uniform 3:2 aspect ratio matching cover graphics */}
+                    <div className="relative overflow-hidden rounded-2xl bg-neutral-100 w-full aspect-[3/2] shadow-sm">
+                      <img
+                        src={blog.image}
+                        alt={blog.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
 
-                      return (
-                        <article
-                          key={blog.slug || idx}
-                          onClick={() => handleNavigate(blog.slug)}
-                          className="group flex flex-col space-y-3 cursor-pointer"
-                        >
-                          {/* Media Container with alternating aspect ratio */}
-                          <div
-                            className={`relative overflow-hidden rounded-xl bg-neutral-100 w-full ${isVertical ? "aspect-[3/4]" : "aspect-[16/10]"
-                              }`}
-                          >
-                            <img
-                              src={blog.image}
-                              alt={blog.title}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                          </div>
+                    {/* Badge & Category Tag Row */}
+                    <div className="flex items-center flex-wrap gap-2 text-xs pt-1">
+                      {isWhitepaper ? (
+                        <span className="inline-flex items-center gap-1 bg-[#00dc23] text-white font-bold text-[10px] px-2 py-0.5 rounded-[2px] tracking-wide uppercase">
+                          <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
+                          </svg>
+                          Whitepaper
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 bg-[#ffe600] text-black font-extrabold text-[10px] px-2 py-0.5 rounded-[2px] tracking-wide uppercase">
+                          <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                          </svg>
+                          {blog.badge || "Insight"}
+                        </span>
+                      )}
 
-                          {/* Badge & Category Tag Row (Dept.global Style) */}
-                          <div className="flex items-center flex-wrap gap-2 text-xs pt-0.5">
-                            {isWhitepaper ? (
-                              <span className="inline-flex items-center gap-1 bg-[#00dc23] text-white font-bold text-[10px] px-1.5 py-0.5 rounded-[2px] tracking-wide uppercase">
-                                <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-                                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
-                                </svg>
-                                Whitepaper
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 bg-[#ffe600] text-black font-extrabold text-[10px] px-1.5 py-0.5 rounded-[2px] tracking-wide uppercase">
-                                <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-                                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
-                                </svg>
-                                Insight
-                              </span>
-                            )}
+                      <span className="text-neutral-500 font-normal text-xs">
+                        ( {blog.category} )
+                      </span>
 
-                            <span className="text-neutral-500 font-normal text-[11px]">
-                              ( {blog.category} )
-                            </span>
-                          </div>
+                      {blog.date && (
+                        <>
+                          <span className="text-neutral-400">·</span>
+                          <span className="text-neutral-500 font-mono text-xs">
+                            {blog.date}
+                          </span>
+                        </>
+                      )}
+                    </div>
 
-                          {/* Headline */}
-                          <h3 className="text-sm sm:text-base font-normal text-neutral-950 tracking-tight leading-snug line-clamp-3 group-hover:underline underline-offset-2">
-                            {blog.title}
-                          </h3>
-                        </article>
-                      );
-                    })}
-                  </div>
+                    {/* Post Headline */}
+                    <h3 className="text-lg sm:text-xl font-normal text-neutral-950 tracking-tight leading-snug line-clamp-3 group-hover:underline underline-offset-2">
+                      {blog.title}
+                    </h3>
+
+                    {/* Excerpt Description */}
+                    {blog.description && (
+                      <p className="text-sm text-neutral-600 line-clamp-2 leading-relaxed font-sans">
+                        {blog.description}
+                      </p>
+                    )}
+                  </article>
                 );
               })}
             </div>
