@@ -22,7 +22,7 @@ export default function BlogSection() {
     );
   };
 
-  const displayBlogs = blogs.slice(0, 4);
+  const displayBlogs = blogs.slice(0, 3);
 
   // Staggered scroll-triggered entrance for blog cards
   useEffect(() => {
@@ -64,57 +64,53 @@ export default function BlogSection() {
           />
         </div>
 
-        {/* 4-Blog in a Line Format (1st & 3rd Vertical, 2nd & 4th Horizontal) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 items-start">
+        {/* 3-Blog Responsive Grid - uniform aspect ratio to prevent image cropping & maintain clean alignment */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 items-start">
           {displayBlogs.map((blog, idx) => {
-            const isVertical = idx % 2 === 0;
-            const isWhitepaper = idx === 3 || blog.badge === "Whitepaper";
+            const isWhitepaper = blog.badge === "Whitepaper";
 
             return (
               <article
                 key={blog.slug || idx}
                 ref={(el) => (cardsRef.current[idx] = el)}
                 onClick={() => handleNavigate(blog.slug)}
-                className="group flex flex-col space-y-3 cursor-pointer"
+                className="group flex flex-col space-y-3.5 cursor-pointer"
               >
-                {/* Media Container with alternating aspect ratio */}
-                <div
-                  className={`relative overflow-hidden rounded-xl bg-neutral-100 w-full ${isVertical ? "aspect-[3/4]" : "aspect-[16/10]"
-                    }`}
-                >
+                {/* Media Container with uniform 3:2 aspect ratio matching the blog cover graphics */}
+                <div className="relative overflow-hidden rounded-2xl bg-neutral-100 w-full aspect-[3/2] shadow-sm">
                   <img
                     src={blog.image}
                     alt={blog.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
                 </div>
 
                 {/* Badge & Category Tag Row */}
-                <div className="flex items-center flex-wrap gap-2 text-xs pt-0.5">
+                <div className="flex items-center flex-wrap gap-2 text-xs pt-1">
                   {isWhitepaper ? (
-                    <span className="inline-flex items-center gap-1 bg-[#00dc23] text-white font-bold text-[10px] px-1.5 py-0.5 rounded-[2px] tracking-wide uppercase">
+                    <span className="inline-flex items-center gap-1 bg-[#00dc23] text-white font-bold text-[10px] px-2 py-0.5 rounded-[2px] tracking-wide uppercase">
                       <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
                       </svg>
                       Whitepaper
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 bg-[#ffe600] text-black font-extrabold text-[10px] px-1.5 py-0.5 rounded-[2px] tracking-wide uppercase">
+                    <span className="inline-flex items-center gap-1 bg-[#ffe600] text-black font-extrabold text-[10px] px-2 py-0.5 rounded-[2px] tracking-wide uppercase">
                       <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
                       </svg>
-                      Insight
+                      {blog.badge || "Insight"}
                     </span>
                   )}
 
-                  <span className="text-neutral-500 font-normal text-[11px]">
+                  <span className="text-neutral-500 font-normal text-xs">
                     ( {blog.category} )
                   </span>
                 </div>
 
                 {/* Post Headline */}
-                <h3 className="text-base sm:text-lg font-normal text-neutral-950 tracking-tight leading-snug line-clamp-3 group-hover:underline underline-offset-2">
+                <h3 className="text-lg sm:text-xl font-normal text-neutral-950 tracking-tight leading-snug line-clamp-3 group-hover:underline underline-offset-2">
                   {blog.title}
                 </h3>
               </article>
