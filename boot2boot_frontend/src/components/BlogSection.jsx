@@ -108,6 +108,24 @@ export default function BlogSection() {
                   <span className="text-neutral-500 font-normal text-xs">
                     ( {blog.category} )
                   </span>
+
+                  {blog.date && (
+                    <>
+                      <span className="text-neutral-400">·</span>
+                      <span className="text-neutral-500 font-mono text-xs">
+                        {blog.date}
+                      </span>
+                    </>
+                  )}
+
+                  {blog.readTime && (
+                    <>
+                      <span className="text-neutral-400">·</span>
+                      <span className="text-neutral-500 font-mono text-xs uppercase">
+                        {blog.readTime}
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 {/* Post Headline */}

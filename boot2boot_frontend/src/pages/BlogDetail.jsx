@@ -138,38 +138,15 @@ export default function BlogDetail() {
             {article.title}
           </h1>
 
-          {/* Author Details & Date / Read Time Row */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-5 border-t border-neutral-300">
-            {article.author && (
-              <div className="flex items-center gap-3.5">
-                {article.author.avatar && (
-                  <img
-                    src={article.author.avatar}
-                    alt={article.author.name}
-                    className="w-11 h-11 rounded-full object-cover border border-neutral-300 shadow-sm"
-                  />
-                )}
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-neutral-950">
-                    {article.author.name}
-                  </span>
-                  <span className="text-xs text-neutral-500 font-normal">
-                    {article.author.role}
-                  </span>
-                </div>
-              </div>
+          {/* Date & Read Time Row */}
+          <div className="flex items-center gap-2.5 text-xs font-mono text-neutral-500 pt-5 border-t border-neutral-300">
+            <span>{article.date}</span>
+            {article.readTime && (
+              <>
+                <span className="text-neutral-400">·</span>
+                <span className="uppercase">{article.readTime}</span>
+              </>
             )}
-
-            {/* Date & Read Time placed in front / right of Author */}
-            <div className="flex items-center gap-2.5 text-xs font-mono text-neutral-500 sm:ml-auto">
-              <span>{article.date}</span>
-              {article.readTime && (
-                <>
-                  <span className="text-neutral-400">·</span>
-                  <span className="uppercase">{article.readTime}</span>
-                </>
-              )}
-            </div>
           </div>
         </header>
 

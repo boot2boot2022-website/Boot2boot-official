@@ -150,6 +150,15 @@ export default function Blog() {
                   <span className="text-neutral-500 font-mono text-xs">
                     {featuredAd.date}
                   </span>
+
+                  {featuredAd.readTime && (
+                    <>
+                      <span className="text-neutral-400">·</span>
+                      <span className="text-neutral-500 font-mono text-xs uppercase">
+                        {featuredAd.readTime}
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 {/* Headline */}
@@ -228,6 +237,15 @@ export default function Blog() {
                           <span className="text-neutral-400">·</span>
                           <span className="text-neutral-500 font-mono text-xs">
                             {blog.date}
+                          </span>
+                        </>
+                      )}
+
+                      {blog.readTime && (
+                        <>
+                          <span className="text-neutral-400">·</span>
+                          <span className="text-neutral-500 font-mono text-xs uppercase">
+                            {blog.readTime}
                           </span>
                         </>
                       )}

@@ -1,5 +1,4 @@
-import { sakshiAuthor } from "../../assets/blog-author-image/index.js";
-import { topImage1, topImage2, topImage3 } from "../../assets/blog-top-image/index.js"
+import { topImage1, topImage2, topImage3 } from "../../assets/blog-top-image/index.js";
 
 export const blogs = [
   {
@@ -42,11 +41,7 @@ export const blogs = [
 
     featured: true,
 
-    author: {
-      name: "Sakshi Dhamane",
-      role: "Digital Marketing Executive",
-      avatar: sakshiAuthor,
-    },
+
     htmlContent: `
 <div class="mx-auto max-w-3xl text-base md:text-lg text-slate-700 [&_p]:mb-5 [&_p]:leading-8 [&_strong]:font-semibold [&_strong]:text-slate-900 [&_em]:text-slate-500 [&_h2]:scroll-mt-24 [&_h2]:mt-14 [&_h2]:mb-5 [&_h2]:border-b [&_h2]:border-slate-200 [&_h2]:pb-3 [&_h2]:text-2xl md:[&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-slate-900 [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-slate-900 [&_ul]:mb-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_ul]:marker:text-blue-500 [&_ol]:mb-6 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ol]:marker:font-semibold [&_ol]:marker:text-blue-600 [&_li]:leading-7 [&_a]:text-blue-600 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-blue-800 [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_code]:text-slate-800 [&_.toc]:mb-8 [&_.toc]:rounded-xl [&_.toc]:border [&_.toc]:border-slate-200 [&_.toc]:bg-slate-50 [&_.toc]:py-6 [&_.toc]:pr-6 [&_.toc]:pl-10 [&_.toc]:text-base md:[&_.toc]:columns-2 md:[&_.toc]:gap-10 [&_.toc_li]:break-inside-avoid [&_.note]:my-8 [&_.note]:rounded-r-xl [&_.note]:border-l-4 [&_.note]:border-amber-500 [&_.note]:bg-amber-50 [&_.note]:px-5 [&_.note]:py-4 [&_.note_p]:!mb-0 [&_.note_p]:!text-amber-900 [&_.note_p]:text-base [&_.table-wrapper]:my-8 [&_.table-wrapper]:overflow-x-auto [&_.table-wrapper]:rounded-xl [&_.table-wrapper]:border [&_.table-wrapper]:border-slate-200 [&_table]:w-full [&_table]:min-w-[560px] [&_table]:border-collapse [&_table]:text-left [&_table]:text-sm md:[&_table]:text-base [&_th]:bg-slate-100 [&_th]:px-4 [&_th]:py-3 [&_th]:font-semibold [&_th]:text-slate-900 [&_td]:border-t [&_td]:border-slate-200 [&_td]:px-4 [&_td]:py-3 [&_td]:align-top [&_tbody_tr:nth-child(even)]:bg-slate-50">
 
@@ -702,11 +697,7 @@ export const blogs = [
 
     featured: true,
 
-    author: {
-      name: "Sakshi Dhamane",
-      role: "Digital Marketing Executive",
-      avatar: sakshiAuthor,
-    },
+
     htmlContent: `
 <div class="mx-auto max-w-3xl text-base md:text-lg text-slate-700 [&_p]:mb-5 [&_p]:leading-8 [&_strong]:font-semibold [&_strong]:text-slate-900 [&_em]:text-slate-500 [&_h2]:scroll-mt-24 [&_h2]:mt-14 [&_h2]:mb-5 [&_h2]:border-b [&_h2]:border-slate-200 [&_h2]:pb-3 [&_h2]:text-2xl md:[&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-slate-900 [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-slate-900 [&_ul]:mb-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_ul]:marker:text-blue-500 [&_ol]:mb-6 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ol]:marker:font-semibold [&_ol]:marker:text-blue-600 [&_li]:leading-7 [&_a]:text-blue-600 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-blue-800 [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_code]:text-slate-800 [&_.toc]:mb-8 [&_.toc]:rounded-xl [&_.toc]:border [&_.toc]:border-slate-200 [&_.toc]:bg-slate-50 [&_.toc]:py-6 [&_.toc]:pr-6 [&_.toc]:pl-10 [&_.toc]:text-base md:[&_.toc]:columns-2 md:[&_.toc]:gap-10 [&_.toc_li]:break-inside-avoid [&_.note]:my-8 [&_.note]:rounded-r-xl [&_.note]:border-l-4 [&_.note]:border-amber-500 [&_.note]:bg-amber-50 [&_.note]:px-5 [&_.note]:py-4 [&_.note_p]:!mb-0 [&_.note_p]:!text-amber-900 [&_.note_p]:text-base [&_.table-wrapper]:my-8 [&_.table-wrapper]:overflow-x-auto [&_.table-wrapper]:rounded-xl [&_.table-wrapper]:border [&_.table-wrapper]:border-slate-200 [&_table]:w-full [&_table]:min-w-[560px] [&_table]:border-collapse [&_table]:text-left [&_table]:text-sm md:[&_table]:text-base [&_th]:bg-slate-100 [&_th]:px-4 [&_th]:py-3 [&_th]:font-semibold [&_th]:text-slate-900 [&_td]:border-t [&_td]:border-slate-200 [&_td]:px-4 [&_td]:py-3 [&_td]:align-top [&_tbody_tr:nth-child(even)]:bg-slate-50">
 
@@ -1157,11 +1148,7 @@ export const blogs = [
 
     featured: true,
 
-    author: {
-      name: "Sakshi Dhamane",
-      role: "Digital Marketing Executive",
-      avatar: sakshiAuthor,
-    },
+
 
     htmlContent: `
 <div class="mx-auto max-w-3xl text-base md:text-lg text-slate-700 [&_p]:mb-5 [&_p]:leading-8 [&_strong]:font-semibold [&_strong]:text-slate-900 [&_em]:text-slate-500 [&_h2]:scroll-mt-24 [&_h2]:mt-14 [&_h2]:mb-5 [&_h2]:border-b [&_h2]:border-slate-200 [&_h2]:pb-3 [&_h2]:text-2xl md:[&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-slate-900 [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-slate-900 [&_ul]:mb-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_ul]:marker:text-blue-500 [&_ol]:mb-6 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ol]:marker:font-semibold [&_ol]:marker:text-blue-600 [&_li]:leading-7 [&_a]:text-blue-600 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-blue-800 [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_code]:text-slate-800 [&_.toc]:mb-8 [&_.toc]:rounded-xl [&_.toc]:border [&_.toc]:border-slate-200 [&_.toc]:bg-slate-50 [&_.toc]:py-6 [&_.toc]:pr-6 [&_.toc]:pl-10 [&_.toc]:text-base md:[&_.toc]:columns-2 md:[&_.toc]:gap-10 [&_.toc_li]:break-inside-avoid [&_.note]:my-8 [&_.note]:rounded-r-xl [&_.note]:border-l-4 [&_.note]:border-amber-500 [&_.note]:bg-amber-50 [&_.note]:px-5 [&_.note]:py-4 [&_.note_p]:!mb-0 [&_.note_p]:!text-amber-900 [&_.note_p]:text-base [&_.table-wrapper]:my-8 [&_.table-wrapper]:overflow-x-auto [&_.table-wrapper]:rounded-xl [&_.table-wrapper]:border [&_.table-wrapper]:border-slate-200 [&_table]:w-full [&_table]:min-w-[560px] [&_table]:border-collapse [&_table]:text-left [&_table]:text-sm md:[&_table]:text-base [&_th]:bg-slate-100 [&_th]:px-4 [&_th]:py-3 [&_th]:font-semibold [&_th]:text-slate-900 [&_td]:border-t [&_td]:border-slate-200 [&_td]:px-4 [&_td]:py-3 [&_td]:align-top [&_tbody_tr:nth-child(even)]:bg-slate-50">
