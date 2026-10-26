@@ -6,7 +6,7 @@ export default function ClientsSection() {
   const duplicatedLogos = [...COMPANY_LOGOS, ...COMPANY_LOGOS];
 
   return (
-    <section id="brands" className="relative z-30 w-full bg-[#f7f7f8] pt-4 sm:pt-6 pb-16 sm:pb-25 px-4 sm:px-8 overflow-hidden font-parkinsans">
+    <section className="relative z-30 w-full bg-[#f7f7f8] pt-4 sm:pt-6 pb-16 sm:pb-25 px-4 sm:px-8 overflow-hidden font-parkinsans">
       <div className="max-w-7xl mx-auto">
 
         {/* Section Heading */}

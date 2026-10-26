@@ -106,26 +106,7 @@ export default function Navbar() {
       return;
     }
 
-    const handleScroll = () => {
-      const scrollPos = window.scrollY + 280;
-      const contactEl = document.getElementById("contact");
-      const blogEl = document.getElementById("blog");
-      const workEl = document.getElementById("social-media");
-
-      if (contactEl && contactEl.offsetTop <= scrollPos) {
-        setActiveItem("Contact");
-      } else if (blogEl && blogEl.offsetTop <= scrollPos) {
-        setActiveItem("Blog");
-      } else if (workEl && workEl.offsetTop <= scrollPos) {
-        setActiveItem("Works");
-      } else {
-        setActiveItem("Home");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    setActiveItem("Home");
   }, [location.pathname]);
 
   // Initial GSAP setup

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import WarpText from './WarpText';
 import TextRollEffect from '../animated-reusable-component/TextRollEffect';
@@ -39,7 +38,7 @@ export default function Boot2BootFooter({
   };
 
   const footerLinks = [
-    { label: 'About', href: '/about' },
+    { label: 'Home', href: '/' },
     { label: 'Blog', href: '/blog' },
     { label: 'Careers', href: '/careers' },
     { label: 'Meet The Team', href: '/meet-the-team' },
