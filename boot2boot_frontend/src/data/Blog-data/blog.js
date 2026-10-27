@@ -7,7 +7,7 @@ export const blogs = [
     slug: "ultimate-guide-seo-organic-growth-in-2026",
     category: "SEO",
     badge: "Insight",
-    date: "22-October-2026",
+    date: "05-October-2026",
     readTime: "25 MIN READ",
     title: "The Ultimate Guide to SEO & Organic Growth in 2026",
 
@@ -663,7 +663,7 @@ export const blogs = [
     slug: "complete-performance-marketing-playbook-2026",
     category: "Performance Marketing",
     badge: "Playbook",
-    date: "23-October-2026",
+    date: "19-October-2026",
     readTime: "24 MIN READ",
     title: "The Complete Performance Marketing Playbook in 2026",
 
@@ -1114,7 +1114,7 @@ export const blogs = [
     slug: "social-media-marketing-guide-business-growth",
     category: "Social Media",
     badge: "Strategy Guide",
-    date: "23-October-2026",
+    date: "26-October-2026",
     readTime: "22 MIN READ",
     title: "Social Media Marketing Guide for Business Growth in 2026",
 
